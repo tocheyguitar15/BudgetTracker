@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block body %}
+<body>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <header>
+        <h1>Budget Tracker</h1>
+        <!-- Include this link in your template where appropriate -->
+        <a href="{% url 'logout' %}" class="btn btn-info">Logout</a>
+
+    </header>
+    {% if msg %}
+    <section>
+        <h2 style="color:{% if msg == 'You are on Budget' %}green {% else %} red{% endif %};">
+            {{msg}}
+        </h2>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2>Income</h2>
+        <form method="post" id="income">
+            <label for="incomeSource">Income Quote:</label>
+            {% csrf_token %}
+            <input type="text" id="incomeSource" name="incomeSource" required>
+
+            <label for="incomeAmount">Amount:</label>
+            {% csrf_token %}
+            <input type="number" id="incomeAmount" name="incomeAmount" required>
+
+            <input type="submit" value="Add Income" name="income">
+        </form>
+    </section>
+    
+    <section>
+
+        <h2>Expenses</h2>
+        <form method="post">
+            <label for="expenseCategory">Expense Quote:</label>
+            {% csrf_token %}
+            <input type="text" id="expenseCategory" name="expenseCategory" required>
+
+            <label for="expenseAmount">Amount:</label>
+            {% csrf_token %}
+            <input type="number" id="expenseAmount" name="expenseAmount" required>
+
+            <input type="submit" value="Add Expense" name="expense">
+        </form>
+    </section>
+
+    <section>
+        <h2>History &nbsp;<span><a href="{% url "history" %}" class="btn btn-info">Full History</a></span></h2>
+        <table>
+            <tr>
+                <th style="border: 1px solid #ddd;">Quote</th>
+                <th style="border: 1px solid #ddd;">Amount</th>
+            </tr>
+            {% if quotes %}
+                {% for i in quotes %}
+                    <tr>
+                        <td style="border: 1px solid #ddd;">{{i.quote}}</td>
+                        <td style="border: 1px solid #ddd;color: {% if i.cost < 0 %}red{% else %}green{% endif %}">{{i.cost}}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            
+        </table>
+    </section>
+
+    
+</body>
+{% endblock body %}
